@@ -1,0 +1,62 @@
+<html>
+<head>
+<link rel="stylesheet" href="assets/css/circles.css">
+<!-- Load the Paper.js library -->
+<script type="text/javascript" src="assets/js/lib/paper-full.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.1/howler.js"></script>
+<!-- Define inlined PaperScript associate it with myCanvas -->
+<script type="text/paperscript" canvas="myCanvas">
+
+	var keyData={
+		a: {
+			color: "purple",
+			sound: new Howl({
+				src: ['Assets/Sounds/Arrow.wav']
+			})
+		},
+		s: {
+			color: "green",
+			sound: new Howl({
+  				src: ['Assets/Sounds/Bubbles.wav']
+			})
+		},
+		d: {
+			color: "yellow",
+			sound: new Howl({
+  				src: ['Assets/Sounds/Bongo.wav']
+			})
+		}
+	}
+
+	var circles=[];
+
+	function onKeyDown(event) {
+		if(keyData[event.key]){
+			var maxPoint=new Point(view.size.width, view.size.height);
+			var randomPoint=Point.random();
+			var point=maxPoint*randomPoint;
+			var newCircle=new Path.Circle(point, 500);
+			newCircle.fillColor=keyData[event.key].color;
+			keyData[event.key].sound.play();
+			circles.push(newCircle);
+		}
+	}
+
+	function onFrame(event){
+			for(var i = 0; i < circles.length; i++){
+				circles[i].fillColor.hue += 1;
+				circles[i].scale(.9);
+				if(circles[i].area < 1){
+					circles[i].remove();
+					circles.splice(i, 1);
+					console.log(circles);
+				}
+			}
+	}
+</script>
+
+</head>
+<body>
+	<canvas id="myCanvas" resize></canvas>
+</body>
+</html>
